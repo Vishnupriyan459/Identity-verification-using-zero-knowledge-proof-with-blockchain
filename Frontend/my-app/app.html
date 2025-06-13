@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identity Verification - Registration Department</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            
+        }
+
+        .department-name {
+            color: #333;
+            font-size: 1.2rem;
+        }
+
+        .verification-form {
+            background-color: #d4ecd4;
+            border-radius: 15px;
+            padding: 40px;
+            margin-top: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-control {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            background: white;
+            width: 100%;
+        }
+
+        .form-control.address {
+            height: 100px;
+            resize: none;
+        }
+
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-wrapper::after {
+            content: '▼';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #666;
+        }
+
+        .upload-section {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 40px;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .upload-container {
+            border: 2px dashed #999;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-container:hover {
+            border-color: #666;
+            background: #f9f9f9;
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .verify-section {
+            text-align: center;
+        }
+
+        .verify-section h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-upload {
+            background: #6fb36f;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .btn-upload:hover {
+            background: #5a995a;
+        }
+
+        .btn-verify {
+            background: white;
+            color: #333;
+            padding: 12px 30px;
+        }
+
+        .btn-verify:hover {
+            background: #f0f0f0;
+        }
+
+        .otp-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .otp-button {
+            background: #6fb36f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .upload-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .verification-form {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <img src="public/gov.png" alt="Registration Department Logo" class="logo" >
+            
+        </header>
+
+        <h1>Proof of Identity</h1>
+
+        <div class="verification-form">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" class="form-control" placeholder="Enter the Full name as per doc">
+                </div>
+
+                <div class="form-group">
+                    <label for="idType">Identity Type</label>
+                    <div class="select-wrapper">
+                        <select id="idType" class="form-control">
+                            <option value="">Choose the Id Type</option>
+                            <option value="aadhaar">Aadhaar</option>
+                            <option value="pan">PAN</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="idNumber">Identity No:</label>
+                    <input type="text" id="idNumber" class="form-control" placeholder="Enter the Id as per type">
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <textarea id="address" class="form-control address" placeholder="Enter the Full name as per doc"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone No:</label>
+                    <input type="tel" id="phone" class="form-control" placeholder="Number in your Id">
+                </div>
+
+                <div class="form-group">
+                    <label for="otp">Otp No:</label>
+                    <div class="otp-section">
+                        <input type="text" id="otp" class="form-control" placeholder="Number in your otp">
+                        <button class="otp-button">OTP</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="upload-section">
+                <div>
+                    <h3>UPLOAD YOUR ID</h3>
+                    <div id="uploadArea" class="upload-container">
+                        <div class="upload-icon">+</div>
+                    </div>
+                    <button class="btn btn-upload">UPLOAD</button>
+                </div>
+
+                <div class="verify-section">
+                    <h2>One step to verify<br>without waiting time</h2>
+                    <button class="btn btn-verify">Connect with SecureGo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // File upload handling
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.style.display = 'none';
+            fileInput.accept = 'image/*';
+
+            uploadArea.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files && e.target.files[0]) {
+                    const file = e.target.files[0];
+                    // Handle file upload here
+                    console.log('File selected:', file.name);
+                }
+            });
+
+            // OTP handling
+            const otpButton = document.querySelector('.otp-button');
+            otpButton.addEventListener('click', () => {
+                const phone = document.getElementById('phone').value;
+                if (phone) {
+                    // Handle OTP sending here
+                    console.log('Sending OTP to:', phone);
+                    alert('OTP sent successfully!');
+                } else {
+                    alert('Please enter a phone number first');
+                }
+            });
+
+            // Form submission
+            const verifyButton = document.querySelector('.btn-verify');
+            verifyButton.addEventListener('click', () => {
+                const formData = {
+                    fullName: document.getElementById('fullName').value,
+                    idType: document.getElementById('idType').value,
+                    idNumber: document.getElementById('idNumber').value,
+                    address: document.getElementById('address').value,
+                    phone: document.getElementById('phone').value,
+                    otp: document.getElementById('otp').value
+                };
+
+                // Handle verification here
+                console.log('Form data:', formData);
+            });
+        });
+    </script>
+</body>
+</html>

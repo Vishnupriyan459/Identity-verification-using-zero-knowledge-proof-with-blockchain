@@ -1,0 +1,98 @@
+import Web3 from 'web3';
+import { initialize } from 'zokrates-js';
+import fs from 'fs';
+import AadhaarContractConfig from './Contract/AadhaarContractConfig.json' assert { type: 'json' };
+
+// Connect to Ganache
+const web3 = new Web3('http://localhost:7545');
+
+// Verifier Contract ABI and Address (replace with your deployed address)
+const verifierABI = AadhaarContractConfig.abi;
+const verifierAddress = AadhaarContractConfig.ContractAddress; // Replace with deployed contract address
+const verifierContract = new web3.eth.Contract(verifierABI, verifierAddress);
+
+const aadhaarZokPath = 'Zokartes/aadhaar.zok';
+
+async function verifyTx(verifyTxPromise) {
+    try {
+        const receipt = await verifyTxPromise;
+        
+        
+
+        // Check if the transaction status is 1 (successful) or 0 (failed)
+        const isSuccess = receipt.status === 1n;
+        if (receipt.status === 1n) {
+          console.log("Transaction was successful!");
+        } else {
+          console.log("Transaction failed.");
+        }
+         // true if successful, false if failed
+        return isSuccess;
+    } catch (error) {
+        console.error('Error during transaction verification:', error);
+        return false; // Return false in case of an error
+    }
+}
+async function main() {
+  const accounts = await web3.eth.getAccounts();
+  const sender = accounts[1]; // Use the first account for transactions
+
+  initialize().then(async (zokratesProvider) => {
+    // Load ZoKrates source
+    const source = fs.readFileSync(aadhaarZokPath, 'utf8');
+
+    // Compilation
+    const artifacts = zokratesProvider.compile(source);
+
+    // Computation (witness and public inputs)
+    const { witness, output } = zokratesProvider.computeWitness(artifacts, [
+      BigInt(123456789012).toString(),
+      BigInt(123456789013).toString(),
+      BigInt(49263835568790852285136755540501101044952629041170102772579963724714827315464).toString(),
+      BigInt(49263835568790852285136755540501101044952629041170102772579963724714827315464).toString(),
+      BigInt(19900101).toString(),
+      BigInt(19900101).toString(),
+      BigInt(30).toString(),
+      BigInt(30).toString(),
+      BigInt(39202355866493996478938002602198439353433168551890330388544620641933385911741).toString(),
+      BigInt(39202355866493996478938002602198439353433168551890330388544620641933385911741).toString(),
+    ]);
+    console.log(output);
+    
+
+    // Setup
+    const keypair = zokratesProvider.setup(artifacts.program);
+
+    // Proof Generation
+    const proof = zokratesProvider.generateProof(artifacts.program, witness, keypair.pk);
+
+    // Verify Proof Off-Chain
+    const isVerified = zokratesProvider.verify(keypair.vk, proof);
+    console.log('Off-chain verification:', isVerified);
+
+    // Extract Proof Data for Solidity
+    const proofData = {
+      a: proof.proof.a,
+      b: proof.proof.b,
+      c: proof.proof.c,
+      
+    };
+    const input=proof.inputs
+
+    console.log('Proof Data:', proofData);
+
+    // Interact with Verifier Contract in Solidity
+    const receipt = await verifierContract.methods
+      .verifyTx(proofData, input)
+      .send({ from: sender, gas: 3000000 });
+      
+
+    console.log('On-chain verification transaction receipt:', receipt);
+    verifyTx(receipt)
+    
+  });
+}
+
+
+
+main().catch(console.error);

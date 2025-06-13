@@ -1,0 +1,50 @@
+const express = require('express');
+const Web3 = require('web3');
+const { initialize } = require('zokrates-js');
+const fs = require('fs');
+const app = express();
+const port = 3000;
+
+app.use(express.json());
+
+// Connect to Ethereum network (Ganache on port 7545)
+const web3 = new Web3('http://localhost:7545'); // Ganache default port is 7545
+
+// Endpoint for verifying identity
+app.post('/verify-identity', async (req, res) => {
+  const { aadhaarNumber } = req.body;
+  
+  try {
+    // Initialize ZoKrates
+    const zokratesProvider = await initialize();
+
+    // Read ZoKrates program from file
+    const program = fs.readFileSync('/Zokartes/zkProgram.zok', 'utf8');
+
+    // Compile the program
+    const compileResult = zokratesProvider.compile(program);
+    const setupResult = zokratesProvider.setup(compileResult);
+    const witness = zokratesProvider.computeWitness(setupResult.program, [aadhaarNumber, '123456789012']); // Replace with your dummy number
+
+    const proof = zokratesProvider.generateProof(setupResult.program, witness);
+
+    // Interact with Solidity contract to verify proof
+    const contractABI = [...]; // Your contract ABI here
+    const contractAddress = '0x...'; // Deployed contract address
+    const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+    const verified = await contract.methods.verifyIdentity(proof, [aadhaarNumber, '123456789012']).call();
+    
+    if (verified) {
+      res.status(200).send({ message: 'Identity verified successfully!' });
+    } else {
+      res.status(400).send({ message: 'Identity verification failed.' });
+    }
+  } catch (error) {
+    res.status(500).send({ message: 'Error processing the verification.' });
+  }
+});
+
+app.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}`);
+});

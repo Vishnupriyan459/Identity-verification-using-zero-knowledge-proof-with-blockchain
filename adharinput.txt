@@ -1,0 +1,9 @@
+{
+    "name":"John Doe",
+    "address":"123 Main St, City",
+    "aadhaarNumber":123456789012,
+    "dob":19900101,
+    "age":30
+
+}
+user aadhaar input

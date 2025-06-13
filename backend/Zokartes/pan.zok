@@ -1,0 +1,49 @@
+// Condition for verifying PAN details
+def check_pan_details(
+    field pan_input, 
+    field expected_pan, 
+    field name_hash_input, 
+    field expected_name_hash, 
+    field father_name_hash_input,
+    field expected_father_name_hash,
+    field dob_input, 
+    field expected_dob
+) -> (bool, bool, bool, bool, bool) {
+    // Check PAN number
+    bool pan_valid = pan_input == expected_pan;
+
+    // Check hashed name
+    bool name_valid = name_hash_input == expected_name_hash;
+
+    // Check hashed father's name
+    bool father_name_valid = father_name_hash_input == expected_father_name_hash;
+
+    // Check date of birth
+    bool dob_valid = dob_input == expected_dob;
+
+    // Overall validation (all must be true)
+    bool overall_valid = pan_valid && name_valid && father_name_valid && dob_valid;
+
+    // Return tuple with overall result + individual checks
+    return (overall_valid, pan_valid, name_valid, father_name_valid, dob_valid);
+}
+
+// Main function
+def main(
+    field pan_input,
+    field expected_pan,
+    field name_hash_input,
+    field expected_name_hash,
+    field father_name_hash_input,
+    field expected_father_name_hash,
+    field dob_input,
+    field expected_dob
+) -> (bool, bool, bool, bool, bool) {
+    // Use the condition logic
+    return check_pan_details(
+        pan_input, expected_pan, 
+        name_hash_input, expected_name_hash, 
+        father_name_hash_input, expected_father_name_hash, 
+        dob_input, expected_dob
+    );
+}

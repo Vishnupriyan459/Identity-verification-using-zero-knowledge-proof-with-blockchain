@@ -1,0 +1,54 @@
+// Aadhaar Verification with Feedback (Including Father's Name)
+
+def main(
+    field aadhaar_input,
+    field expected_aadhaar,
+    field name_hash_input,
+    field expected_name_hash,
+    field father_name_hash_input,
+    field expected_father_name_hash,
+    field dob_input,
+    field expected_dob,
+    field age_input,
+    field expected_age,
+    field address_hash_input,
+    field expected_address_hash
+) -> (bool, field, field, field, field, field, field) {
+    // Check Aadhaar number
+    bool aadhaar_valid = aadhaar_input == expected_aadhaar;
+    field aadhaar_feedback = aadhaar_valid ? 1 : 0;
+
+    // Check hashed name
+    bool name_valid = name_hash_input == expected_name_hash;
+    field name_feedback = name_valid ? 1 : 0;
+
+    // Check hashed father's name
+    bool father_name_valid = father_name_hash_input == expected_father_name_hash;
+    field father_name_feedback = father_name_valid ? 1 : 0;
+
+    // Check date of birth
+    bool dob_valid = dob_input == expected_dob;
+    field dob_feedback = dob_valid ? 1 : 0;
+
+    // Check age
+    bool age_valid = age_input == expected_age;
+    field age_feedback = age_valid ? 1 : 0;
+
+    // Check hashed address
+    bool address_valid = address_hash_input == expected_address_hash;
+    field address_feedback = address_valid ? 1 : 0;
+
+    // Overall verification result
+    bool overall_result = aadhaar_valid && name_valid && father_name_valid && dob_valid && age_valid && address_valid;
+
+    // Return overall result and individual feedback as separate fields
+    return (
+        overall_result,
+        aadhaar_feedback,
+        name_feedback,
+        father_name_feedback,
+        dob_feedback,
+        age_feedback,
+        address_feedback
+    );
+}
